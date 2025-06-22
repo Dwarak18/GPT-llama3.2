@@ -59,7 +59,7 @@ webapp/
 
 ### 1. Clone the Repository
 ```sh
-git clone https://github.com/Dwarak18/GPT-llama3.2
+git clone https://github.com/Dwarak18/GPT-llama3.2.git
 cd webapp
 ```
 
