@@ -859,6 +859,287 @@
             color: #10b981;
         }
 
+        /* --- PROFILE ICON: Prevent hover/fade, ensure visibility --- */
+        .user-menu-button,
+        .user-menu-button:hover,
+        .user-menu-button:active {
+            background: none !important;
+            color: var(--text-primary) !important;
+            filter: none !important;
+            opacity: 1 !important;
+            transition: none !important;
+        }
+        [data-theme="dark"] .user-menu-button,
+        [data-theme="dark"] .user-menu-button:hover {
+            color: #fff !important;
+        }
+        [data-theme="light"] .user-menu-button,
+        [data-theme="light"] .user-menu-button:hover {
+            color: #222 !important;
+        }
+
+        /* --- MESSAGE BOX: Prevent hover color change --- */
+        .message-box:hover,
+        .message-box.user-message:hover,
+        .message-box.ai-message:hover {
+            background: inherit !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
+            transform: none !important;
+        }
+
+        /* --- SIDEBAR: Prevent hover/fade, static color --- */
+        .sidebar,
+        .sidebar:hover {
+            background: #312e81 !important;
+            box-shadow: none !important;
+            transition: none !important;
+        }
+
+        /* --- CHATBOX: Hide side scroll bar in messages --- */
+        .chat-messages {
+            overflow-y: auto;
+            overflow-x: hidden !important;
+        }
+        .chat-messages::-webkit-scrollbar {
+            height: 0 !important;
+        }
+
+        /* --- CHATBOX: Prevent focus/active color change, keep static --- */
+        .chat-input-area,
+        .chat-input-area:focus-within {
+            background: var(--bg-tertiary) !important;
+            box-shadow: var(--shadow-md) !important;
+            transition: none !important;
+        }
+
+        /* --- MESSAGE BOX: Prevent hover/focus color change, static color, ensure text visible in dark mode --- */
+        .message-box,
+        .message-box.user-message,
+        .message-box.ai-message {
+            background: inherit !important;
+            color: var(--text-primary) !important;
+        }
+        .message-box:hover,
+        .message-box.user-message:hover,
+        .message-box.ai-message:hover,
+        .message-box:active,
+        .message-box.user-message:active,
+        .message-box.ai-message:active {
+            background: inherit !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+            transform: none !important;
+        }
+        [data-theme="dark"] .message-box,
+        [data-theme="dark"] .message-box.user-message,
+        [data-theme="dark"] .message-box.ai-message {
+            color: #fff !important;
+        }
+        [data-theme="light"] .message-box,
+        [data-theme="light"] .message-box.user-message,
+        [data-theme="light"] .message-box.ai-message {
+            color: #222 !important;
+        }
+        /* Remove extra margin/padding and empty lines in AI message box */
+        .ai-message.message-box {
+            margin-top: 0.75rem !important;
+            margin-bottom: 0.75rem !important;
+            padding-top: 1.25rem !important;
+            padding-bottom: 1.25rem !important;
+        }
+        .ai-message.message-box > *:first-child {
+            margin-top: 0 !important;
+        }
+        .ai-message.message-box > *:last-child {
+            margin-bottom: 0 !important;
+        }
+        .ai-message.message-box p {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        .ai-message.message-box .message-content {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        
+        /* Remove background box for AI message in all modes */
+        .ai-message.message-box,
+        [data-theme="dark"] .ai-message.message-box {
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            padding: 0.75rem 1.25rem !important;
+            margin: 0.5rem 0 !important;
+        }
+
+        /* Remove extra space between sender and message for both user and AI */
+        .message-box > .flex,
+        .message-box > .font-semibold,
+        .message-box > p,
+        .message-box > .message-content {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            line-height: 1.4 !important;
+        }
+
+        /* Remove margin from message box itself */
+        .message-box {
+            margin-top: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
+            padding-top: 0.5rem !important;
+            padding-bottom: 0.5rem !important;
+        }
+
+        /* Remove bottom margin from sender label if using .mb-2 or similar */
+        .message-box > .mb-2 {
+            margin-bottom: 0 !important;
+        }
+
+        /* Compact chat message box for both user and AI */
+        .message-box {
+            max-width: 350px !important;
+            min-width: 60px !important;
+            padding: 0.4rem 0.8rem !important;
+            border-radius: 14px !important;
+            margin: 0.3rem 0 !important;
+            font-size: 0.97rem !important;
+            line-height: 1.35 !important;
+            box-shadow: none !important;
+            background: none !important;
+        }
+
+        /* Remove all extra spacing inside message box */
+        .message-box > .flex,
+        .message-box > .font-semibold,
+        .message-box > p,
+        .message-box > .message-content {
+            margin: 0 !important;
+            padding: 0 !important;
+            line-height: 1.35 !important;
+        }
+        .message-box > .mb-2 {
+            margin-bottom: 0 !important;
+        }
+        .message-box > *:first-child,
+        .message-box > *:last-child {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+        }
+
+        /* --- PROFILE PAGE: Back button visible and color matches palette --- */
+        #back-to-chat-button {
+            background: #a78bfa !important;
+            color: #fff !important;
+            border: none !important;
+            box-shadow: 0 2px 8px #a78bfa33 !important;
+            transition: background 0.2s, color 0.2s;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+        #back-to-chat-button:hover {
+            background: #7c3aed !important;
+            color: #fff !important;
+        }
+        #back-to-chat-button i {
+            color: #fff !important;
+        }
+
+        /* --- AI MESSAGE: Glassmorphism style, no default box, green accent --- */
+        .ai-message.message-box {
+            background: rgba(39, 174, 96, 0.18) !important;
+            border: 1.5px solid rgba(34, 197, 94, 0.25) !important;
+            box-shadow: 0 8px 32px 0 rgba(34, 197, 94, 0.18), 0 1.5px 8px 0 rgba(0,0,0,0.10) !important;
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border-radius: 24px !important;
+            color: #fff !important;
+            font-weight: bold !important;
+            padding: 1.25rem 1.75rem !important;
+            margin: 0.75rem 0 !important;
+            transition: box-shadow 0.2s, background 0.3s;
+        }
+        .ai-message.message-box .font-semibold {
+            color: #22c55e !important;
+            font-weight: bold !important;
+        }
+        .ai-message.message-box i {
+            color: #22c55e !important;
+        }
+        /* Remove triangle pointer for AI message */
+        .ai-message::after {
+            display: none !important;
+        }
+
+        /* --- DARK MODE: Make all message, chat history, and profile text bold and white for visibility --- */
+        [data-theme="dark"] .message-box,
+        [data-theme="dark"] .message-box.user-message,
+        [data-theme="dark"] .message-box.ai-message,
+        [data-theme="dark"] .chat-history-item,
+        [data-theme="dark"] .profile-container,
+        [data-theme="dark"] .profile-container h2,
+        [data-theme="dark"] .profile-container p,
+        [data-theme="dark"] .profile-container .font-semibold,
+        [data-theme="dark"] .profile-container .text-sm,
+        [data-theme="dark"] .profile-container .text-gray-600,
+        [data-theme="dark"] .profile-container .text-gray-700 {
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+        [data-theme="dark"] .profile-container .bg-gray-50 {
+        background-color: #23263a !important;
+        color: #fff !important;
+        }
+        [data-theme="dark"] .profile-container .font-semibold,
+        [data-theme="dark"] .profile-container .text-sm,
+        [data-theme="dark"] .profile-container .text-gray-700 {
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+        [data-theme="dark"] .profile-container button {
+            color: #a78bfa !important;
+            font-weight: bold !important;
+        }
+
+        [data-theme="dark"] .chat-header h2,
+        [data-theme="dark"] .chat-header p {
+        color: #fff !important;
+        font-weight: bold !important;
+        }
+
+        /* --- PROFILE PAGE: Make info text bold in all themes --- */
+        .profile-container h2,
+        .profile-container p,
+        .profile-container .font-semibold,
+        .profile-container .text-sm {
+            font-weight: bold !important;
+        }
+
+        /* --- CHAT HISTORY: Hide horizontal scroll and make text bold in dark mode --- */
+        .chat-history-list {
+            overflow-x: hidden !important;
+        }
+        [data-theme="dark"] .chat-history-item {
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+        .chat-history-item {
+            font-weight: bold !important;
+        }
+
+        /* --- MESSAGE BOX: Make text bold in all themes --- */
+        .message-box,
+        .message-box.user-message,
+        .message-box.ai-message {
+            font-weight: bold !important;
+        }
+
+
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
@@ -1067,7 +1348,7 @@
 
     </div>
 
-    <!-- Static JS for UI only, no Firebase or Gemini -->
+    <!-- Static JS for UI only -->
     <script>
         // --- UI State Management ---
         const loginPage = document.getElementById('login-page');
@@ -1550,6 +1831,10 @@
                 currentChatId = null;
                 showApp('login-page');
             }
+        });
+
+        document.getElementById('back-to-chat-button').addEventListener('click', function() {
+            showApp('chat-app');
         });
         
         // --- Connection Status Checking ---
