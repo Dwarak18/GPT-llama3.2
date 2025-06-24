@@ -1074,9 +1074,7 @@
         /* Remove triangle pointer for AI message */
         .ai-message::after {
             display: none !important;
-        }
-
-        /* --- DARK MODE: Make all message, chat history, and profile text bold and white for visibility --- */
+        }        /* --- DARK MODE: Make all message, chat history, and profile text bold and white for visibility --- */
         [data-theme="dark"] .message-box,
         [data-theme="dark"] .message-box.user-message,
         [data-theme="dark"] .message-box.ai-message,
@@ -1087,7 +1085,11 @@
         [data-theme="dark"] .profile-container .font-semibold,
         [data-theme="dark"] .profile-container .text-sm,
         [data-theme="dark"] .profile-container .text-gray-600,
-        [data-theme="dark"] .profile-container .text-gray-700 {
+        [data-theme="dark"] .profile-container .text-gray-700,
+        [data-theme="dark"] #profile-username-display,
+        [data-theme="dark"] #profile-display-username,
+        [data-theme="dark"] #profile-display-email,
+        [data-theme="dark"] #profile-display-phone {
             color: #fff !important;
             font-weight: bold !important;
         }
@@ -1104,12 +1106,25 @@
         [data-theme="dark"] .profile-container button {
             color: #a78bfa !important;
             font-weight: bold !important;
-        }
-
-        [data-theme="dark"] .chat-header h2,
+        }        [data-theme="dark"] .chat-header h2,
         [data-theme="dark"] .chat-header p {
         color: #fff !important;
         font-weight: bold !important;
+        }        /* --- DARK MODE: User menu and profile elements visibility --- */
+        [data-theme="dark"] .user-menu-button span,
+        [data-theme="dark"] .user-menu .font-medium,
+        [data-theme="dark"] .sidebar .font-medium,
+        [data-theme="dark"] .sidebar span,
+        [data-theme="dark"] .text-gray-700,
+        [data-theme="dark"] .text-gray-600,
+        [data-theme="dark"] .text-gray-500 {
+            color: #fff !important;
+            font-weight: bold !important;
+        }
+
+        /* --- DARK MODE: Ensure all sidebar text is visible --- */
+        [data-theme="dark"] .sidebar * {
+            color: #fff !important;
         }
 
         /* --- PROFILE PAGE: Make info text bold in all themes --- */
@@ -1348,8 +1363,12 @@
 
     </div>
 
-    <!-- Static JS for UI only -->
-    <script>
+    <!-- Static JS for UI only -->    <script>
+        // --- Configuration ---
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:3001' 
+            : `http://${window.location.hostname}:3001`;
+        
         // --- UI State Management ---
         const loginPage = document.getElementById('login-page');
         const signupPage = document.getElementById('signup-page');
@@ -1393,7 +1412,7 @@
             const usernameOrEmail = document.getElementById('login-email-username').value;
             const password = document.getElementById('login-password').value;
             try {
-                const res = await fetch('http://localhost:3001/login', {
+                const res = await fetch(`${API_BASE_URL}/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ usernameOrEmail, password })
@@ -1429,7 +1448,7 @@
                 return;
             }
             try {
-                const res = await fetch('http://localhost:3001/signup', {
+                const res = await fetch(`${API_BASE_URL}/signup`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, email, password, phone })
@@ -1764,7 +1783,7 @@
         
         async function sendToOllama(message) {
             try {
-                const response = await fetch('http://localhost:3001/chat', {
+                const response = await fetch(`${API_BASE_URL}/chat`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1840,7 +1859,7 @@
         // --- Connection Status Checking ---
         async function checkBackendConnection() {
             try {
-                const response = await fetch('http://localhost:3001/', {
+                const response = await fetch(`${API_BASE_URL}/`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1858,8 +1877,7 @@
                 console.log('❌ Failed to connect to backend server:', error.message);
                 return false;
             }
-        }
-          // Check backend connection on page load
+        }        // Check backend connection on page load
         document.addEventListener('DOMContentLoaded', async function() {
             // Initialize theme first
             initializeTheme();
@@ -1879,8 +1897,42 @@
             const backendConnected = await checkBackendConnection();
             if (!backendConnected) {
                 console.log('⚠️  Backend server is not available. Make sure to start it with: cd backend && npm start');
+            } else {
+                // Also check Ollama health
+                await checkOllamaHealth();
             }
         });
+        
+        // Check Ollama health through backend
+        async function checkOllamaHealth() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health/ollama`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'healthy') {
+                    console.log('✅ Ollama is connected and healthy');
+                    console.log(`📊 Models available: ${data.models_available}`);
+                    console.log(`🤖 Required model available: ${data.required_model_available ? '✅' : '❌'}`);
+                    if (data.models && data.models.length > 0) {
+                        console.log('🔍 Available models:', data.models.join(', '));
+                    }
+                    
+                    if (!data.required_model_available) {
+                        console.log('⚠️  llama3.2:1b-instruct-q4_K_M model is not available. Please ensure it is downloaded.');
+                    }
+                } else {
+                    console.log('❌ Ollama health check failed:', data);
+                }
+            } catch (error) {
+                console.log('❌ Failed to check Ollama health:', error.message);
+            }
+        }
         
         // --- Theme Toggle Functionality ---
         function initializeTheme() {

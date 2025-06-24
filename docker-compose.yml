@@ -1,27 +1,60 @@
-version: '3.8'
+﻿version: '3.8'
+
+networks:
+  chatapp-network:
+    driver: bridge
+
 services:
   mongo:
     image: mongo:6
     container_name: chatapp-mongo
-    # restart: always
+    restart: unless-stopped
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - chatapp-network
+  
+  ollama:
+    build: ./ollama
+    container_name: chatapp-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - chatapp-network
+  
   backend:
     build: ./backend
     container_name: chatapp-backend
-    # restart: always
+    restart: unless-stopped
     ports:
-      - 3001:3001
+      - "3001:3001"
     environment:
       - MONGO_URL=mongodb://mongo:27017/chatapp
+      - OLLAMA_URL=http://ollama:11434
     depends_on:
-      - mongo
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      mongo:
+        condition: service_started
+      ollama:
+        condition: service_healthy
     volumes:
       - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - chatapp-network
 
 volumes:
   mongo_data:
+  ollama_data:

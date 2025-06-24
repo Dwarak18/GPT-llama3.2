@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat App - Quick Start</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            line-height: 1.6;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        h1 { color: #fff; text-align: center; margin-bottom: 30px; }
+        .step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #fff;
+        }
+        .command {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            color: #00ff88;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .success { border-left: 4px solid #00ff88; }
+        .warning { border-left: 4px solid #ffaa00; }
+        .error { border-left: 4px solid #ff4444; }
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 AI Chat App - Quick Start Guide</h1>
+        
+        <div class="step">
+            <h3>📋 Prerequisites</h3>
+            <p>Make sure you have Docker and Docker Compose installed:</p>
+            <div class="command">docker --version && docker-compose --version</div>
+        </div>
+
+        <div class="step">
+            <h3>🎯 Quick Start</h3>
+            <p>Run this command in PowerShell (Windows) or Terminal:</p>
+            <div class="command">
+                <strong>Windows (PowerShell):</strong><br>
+                .\start.ps1
+            </div>
+            <div class="command">
+                <strong>Linux/Mac (Bash):</strong><br>
+                chmod +x start.sh && ./start.sh
+            </div>
+            <p>Or manually start with Docker Compose:</p>
+            <div class="command">docker-compose up -d --build</div>
+        </div>
+
+        <div class="step">
+            <h3>🔍 Service Status</h3>
+            <div id="status-container">
+                <button onclick="checkServices()">Check Service Status</button>
+                <div id="status-results"></div>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3>🌐 Access Points</h3>
+            <p><strong>Frontend:</strong> <a href="index.html" target="_blank" style="color: #00ff88;">Open Chat App</a></p>
+            <p><strong>Backend API:</strong> <a href="http://localhost:3001" target="_blank" style="color: #00ff88;">http://localhost:3001</a></p>
+            <p><strong>Ollama API:</strong> <a href="http://localhost:11434/api/tags" target="_blank" style="color: #00ff88;">http://localhost:11434/api/tags</a></p>
+            <p><strong>Ollama Health:</strong> <a href="http://localhost:3001/health/ollama" target="_blank" style="color: #00ff88;">Health Check</a></p>
+        </div>
+
+        <div class="step">
+            <h3>🛠️ Troubleshooting</h3>
+            <p><strong>If AI model is not responding:</strong></p>
+            <ul>
+                <li>Model download can take 5-15 minutes on first run</li>
+                <li>Check Ollama logs: <code>docker-compose logs ollama</code></li>
+                <li>Verify model: <code>docker exec chatapp-ollama ollama list</code></li>
+                <li>Manual model pull: <code>docker exec chatapp-ollama ollama pull llama3.2:1b-instruct-q4_K_M</code></li>
+            </ul>
+            
+            <p><strong>Common Commands:</strong></p>
+            <div class="command">
+                # View logs<br>
+                docker-compose logs -f<br><br>
+                # Stop services<br>
+                docker-compose down<br><br>
+                # Rebuild services<br>
+                docker-compose up -d --build
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function checkServices() {
+            const container = document.getElementById('status-results');
+            container.innerHTML = '<p>🔄 Checking services...</p>';
+            
+            const services = [
+                { name: 'Backend', url: 'http://localhost:3001/', icon: '🔧' },
+                { name: 'Ollama', url: 'http://localhost:11434/api/tags', icon: '🤖' },
+                { name: 'Ollama Health', url: 'http://localhost:3001/health/ollama', icon: '🏥' }
+            ];
+            
+            let results = '';
+            
+            for (const service of services) {
+                try {
+                    const response = await fetch(service.url, { 
+                        method: 'GET',
+                        mode: 'cors'
+                    });
+                    
+                    if (response.ok) {
+                        results += `<div class="status success">${service.icon} ${service.name}: ✅ Online</div>`;
+                    } else {
+                        results += `<div class="status error">${service.icon} ${service.name}: ❌ Error (${response.status})</div>`;
+                    }
+                } catch (error) {
+                    results += `<div class="status error">${service.icon} ${service.name}: ❌ Offline</div>`;
+                }
+            }
+            
+            container.innerHTML = results;
+        }
+        
+        // Auto-check services on page load
+        window.addEventListener('load', () => {
+            setTimeout(checkServices, 1000);
+        });
+    </script>
+</body>
+</html>
