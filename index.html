@@ -319,24 +319,22 @@
         }        .message-box {
             max-width: min(75%, 500px);
             min-width: 100px;
-            padding: 1rem 1.25rem;
-            border-radius: 20px;
+            padding: 0.5rem 0;
+            border-radius: 0;
             word-wrap: break-word;
             word-break: break-word;
             white-space: pre-wrap;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            box-shadow: none;
+            background: transparent;
+            border: none;
             position: relative;
             animation: messageSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             line-height: 1.5;
             width: fit-content;
-            margin: 0.5rem 0;
-            transition: all 0.3s ease;
+            margin: 0.5rem 0;            transition: none;
             font-size: 0.9rem;
         }
-        .message-box:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-        }        .message-box.short-message {
+        .message-box.short-message {
             max-width: min(50%, 350px);
         }
         .message-box.medium-message {
@@ -344,11 +342,20 @@
         }
         .message-box.long-message {
             max-width: min(75%, 500px);
-        }
-        .message-box p {
+        }        .message-box p {
             margin: 0;
+            padding: 0;
+            line-height: 1.4;
             overflow-wrap: break-word;
             hyphens: auto;
+        }
+        .message-box .message-content {
+            margin: 0;
+            padding: 0;
+        }
+        .message-box .message-content p {
+            margin: 0 !important;
+            padding: 0 !important;
         }
         .message-box .message-content {
             max-height: 300px;
@@ -392,33 +399,25 @@
                 transform: translateY(0);
             }
         }        .user-message {
-            background: var(--bg-message-user);
-            color: var(--text-white);
+            background: transparent;
+            color: var(--text-primary);
             align-self: flex-end;
-            border-bottom-right-radius: 8px;
-        }        .user-message::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: -8px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid rgba(102, 126, 234, 0.8);
-            border-bottom: 8px solid transparent;
-        }        .ai-message {
-            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-            color: var(--text-white);
+            border-bottom-right-radius: 0;
+        }
+
+        .user-message::after {
+            display: none;
+        }
+
+        .ai-message {
+            background: transparent;
+            color: var(--text-primary);
             align-self: flex-start;
-            border-bottom-left-radius: 8px;
-        }        .ai-message::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: -8px;
-            width: 0;
-            height: 0;
-            border-right: 8px solid rgba(34, 197, 94, 0.8);
-            border-bottom: 8px solid transparent;
+            border-bottom-left-radius: 0;
+        }
+
+        .ai-message::after {
+            display: none;
         }.chat-input-area {
             position: fixed;
             bottom: 0;
@@ -743,17 +742,8 @@
         .profile-avatar:hover, .profile-avatar-small:hover {
             box-shadow: 0 8px 32px #a78bfa55;
             transform: scale(1.08) rotate(-2deg);
-        }
-        .message-box {
-            transition: box-shadow 0.2s, background 0.3s;
-        }
-        .message-box.user-message:hover {
-            box-shadow: 0 2px 12px #38bdf855;
-            background: #bae6fd;
-        }
-        .message-box.ai-message:hover {
-            box-shadow: 0 2px 12px #bbf7d055;
-            background: #bbf7d0;
+        }        .message-box {
+            transition: none;
         }
         /* Parallax background animation */
         .parallax-bg {
@@ -873,18 +863,8 @@
         [data-theme="dark"] .user-menu-button:hover {
             color: #fff !important;
         }
-        [data-theme="light"] .user-menu-button,
-        [data-theme="light"] .user-menu-button:hover {
+        [data-theme="light"] .user-menu-button,        [data-theme="light"] .user-menu-button:hover {
             color: #222 !important;
-        }
-
-        /* --- MESSAGE BOX: Prevent hover color change --- */
-        .message-box:hover,
-        .message-box.user-message:hover,
-        .message-box.ai-message:hover {
-            background: inherit !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15) !important;
-            transform: none !important;
         }
 
         /* --- SIDEBAR: Prevent hover/fade, static color --- */
@@ -1537,17 +1517,18 @@
 
         // --- Chat Functionality (AI Integrated) ---
         let chatHistory = [];
-        let currentChatId = null;
-
-        function addMessageToChat(message, sender, isHistory = false) {
+        let currentChatId = null;        function addMessageToChat(message, sender, isHistory = false) {
             const chatMessages = document.getElementById('chat-messages');
             const messageDiv = document.createElement('div');
             
+            // Clean up the message content - remove extra whitespace and newlines
+            const cleanMessage = message.toString().trim().replace(/\s+/g, ' ');
+            
             // Determine message size class based on text length
             let sizeClass = 'short-message';
-            if (message.length > 200) {
+            if (cleanMessage.length > 200) {
                 sizeClass = 'long-message';
-            } else if (message.length > 100) {
+            } else if (cleanMessage.length > 100) {
                 sizeClass = 'medium-message';
             }
             
@@ -1574,8 +1555,8 @@
             }
             
             // Handle very long messages with expand/collapse
-            if (message.length > 1000) {
-                const truncatedMessage = message.substring(0, 500) + '...';
+            if (cleanMessage.length > 1000) {
+                const truncatedMessage = cleanMessage.substring(0, 500) + '...';
                 contentDiv.innerHTML = `
                     <p class="message-text">${truncatedMessage}</p>
                     <button class="expand-btn text-xs underline mt-2 opacity-75 hover:opacity-100 cursor-pointer">Show more</button>
@@ -1587,7 +1568,7 @@
                 
                 expandBtn.addEventListener('click', function() {
                     if (!isExpanded) {
-                        messageText.textContent = message;
+                        messageText.textContent = cleanMessage;
                         expandBtn.textContent = 'Show less';
                         isExpanded = true;
                         contentDiv.scrollTop = 0;
@@ -1598,7 +1579,7 @@
                     }
                 });
             } else {
-                contentDiv.innerHTML = `<p>${message}</p>`;
+                contentDiv.innerHTML = `<p class="mb-0">${cleanMessage}</p>`;
             }
             
             messageDiv.appendChild(contentDiv);
@@ -1610,12 +1591,11 @@
                     contentDiv.scrollTop = 0;
                 }
             }, 100);
-            
-            // Add to current chat history
+              // Add to current chat history
             if (!isHistory && currentChatId) {
                 const chat = chatHistory.find(c => c.id === currentChatId);
                 if (chat) {
-                    chat.messages.push({ sender, message, timestamp: new Date() });
+                    chat.messages.push({ sender, message: cleanMessage, timestamp: new Date() });
                     updateChatHistoryDisplay();
                 }
             }
@@ -1780,8 +1760,7 @@
                 chatInput.focus();
             });
         }
-        
-        async function sendToOllama(message) {
+          async function sendToOllama(message) {
             try {
                 const response = await fetch(`${API_BASE_URL}/chat`, {
                     method: 'POST',
@@ -1796,12 +1775,14 @@
                 }
                 
                 const data = await response.json();
-                return data.reply || "I'm sorry, I couldn't generate a response.";
+                // Clean up the AI response - remove extra whitespace and newlines
+                const cleanReply = (data.reply || "I'm sorry, I couldn't generate a response.").toString().trim().replace(/\s+/g, ' ');
+                return cleanReply;
             } catch (error) {
                 console.error('Ollama API error:', error);
                 throw error;
             }
-        }        
+        }
         function showTypingIndicator() {
             const typingIndicator = document.querySelector('.typing-indicator');
             if (typingIndicator) {
