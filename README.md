@@ -35,23 +35,53 @@ This AI Chat App uses Ollama with the **llama3.2:1b-instruct-q4_K_M** model to p
 **For Linux/Mac users, run this single command to deploy everything:**
 
 ```bash
-# One-liner deployment
+# One-liner deployment (recommended)
 curl -sSL https://raw.githubusercontent.com/Dwarak18/GPT-llama3.2/main/quick-deploy.sh | bash
 ```
 
-**Or download and run locally:**
+**This single command will:**
+- ✅ Install all dependencies (Docker, Python, Git)
+- ✅ Clone the repository
+- ✅ Build and start all services
+- ✅ Download AI model (5-15 minutes)
+- ✅ Start frontend server
+- ✅ Run health checks
+- ✅ Open your browser automatically
+
+**Alternative download and run:**
 
 ```bash
-# Download the automation script
-wget https://raw.githubusercontent.com/Dwarak18/GPT-llama3.2/main/deploy.sh
-chmod +x deploy.sh
+# Download the script first
+wget https://raw.githubusercontent.com/Dwarak18/GPT-llama3.2/main/quick-deploy.sh
+chmod +x quick-deploy.sh
+./quick-deploy.sh
+```
 
-# Run with options
-./deploy.sh                    # Full automated deployment
-./deploy.sh --help             # Show all options
-./deploy.sh --quick            # Skip confirmations
-./deploy.sh --dev              # Development mode (with logs)
-./deploy.sh --cleanup          # Clean up and restart
+### 🪟 **Super Quick Deploy (Windows)**
+
+**For Windows users, run this single PowerShell command:**
+
+```powershell
+# One-liner deployment for Windows (run as Administrator)
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Dwarak18/GPT-llama3.2/main/quick-deploy.ps1" -OutFile "quick-deploy.ps1"; .\quick-deploy.ps1
+```
+
+**This single command will:**
+- ✅ Check and install dependencies (Docker, Python, Git)
+- ✅ Clone the repository
+- ✅ Build and start all services
+- ✅ Download AI model automatically
+- ✅ Start frontend server
+- ✅ Run health checks
+- ✅ Open your browser automatically
+
+**Alternative manual download:**
+
+```powershell
+# Download script first
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Dwarak18/GPT-llama3.2/main/quick-deploy.ps1" -OutFile "quick-deploy.ps1"
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+.\quick-deploy.ps1
 ```
 
 ### 📋 **Manual Bash Automation Commands**
