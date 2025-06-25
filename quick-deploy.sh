@@ -187,11 +187,11 @@ setup_project() {
         cd "$PROJECT_DIR"
     fi
     
-    # Navigate to webapp directory
-    if [ -d "webapp" ]; then
-        cd webapp
+    # Navigate to ai-chat-app directory
+    if [ -d "ai-chat-app" ]; then
+        cd ai-chat-app
     else
-        print_error "webapp directory not found in repository"
+        print_error "ai-chat-app directory not found in repository"
         exit 1
     fi
     
